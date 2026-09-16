@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
+import Spinner from './spinner'
 
 interface Todo {
   id: number
@@ -10,16 +11,18 @@ interface Todo {
 function App() {
   const [todos, setTodos] = useState<Todo[]>([])
   const [input, setInput] = useState('')
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 2000)
+    return () => clearTimeout(t)
+  }, [])
 
   const addTodo = () => {
     const text = input.trim()
     if (!text) return
     setTodos([...todos, { id: Date.now(), text, completed: false }])
     setInput('')
-  }
-
-  const toggleTodo = (id: number) => {
-    setTodos(todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t))
   }
 
   const deleteTodo = (id: number) => {
@@ -42,16 +45,20 @@ function App() {
       <ul className="todo-list">
         {todos.map(todo => (
           <li key={todo.id} className={todo.completed ? 'completed' : ''}>
-            <span className="todo-text" onClick={() => toggleTodo(todo.id)}>
               {todo.text}
-            </span>
+            
             <button className="delete-btn" onClick={() => deleteTodo(todo.id)}>
               &times;
             </button>
           </li>
         ))}
       </ul>
-      {todos.length === 0 && <p className="empty">No todos yet. Add one above!</p>}
+      {loading && (
+        <div className="loading-row">
+          <Spinner />
+        </div>
+      )}
+      {!loading && todos.length === 0 && <p className="empty">No todos yet. Add one above!</p>}
     </div>
   )
 }
