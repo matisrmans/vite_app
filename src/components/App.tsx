@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import Spinner from './spinner'
+import AboutPage from './About'
+import ContactPage from './Contact'
 
 interface Todo {
   id: number
@@ -8,7 +10,9 @@ interface Todo {
   completed: boolean
 }
 
-function App() {
+type Page = 'home' | 'about' | 'contact'
+
+function HomePage() {
   const [todos, setTodos] = useState<Todo[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(true)
@@ -31,7 +35,7 @@ function App() {
 
   return (
     <div className="todo-app">
-      <h1>Todo List</h1>
+      <h2>Home</h2>
       <div className="input-row">
         <input
           type="text"
@@ -45,8 +49,8 @@ function App() {
       <ul className="todo-list">
         {todos.map(todo => (
           <li key={todo.id} className={todo.completed ? 'completed' : ''}>
-              {todo.text}
-            
+            {todo.text}
+
             <button className="delete-btn" onClick={() => deleteTodo(todo.id)}>
               &times;
             </button>
@@ -59,6 +63,43 @@ function App() {
         </div>
       )}
       {!loading && todos.length === 0 && <p className="empty">No todos yet. Add one above!</p>}
+    </div>
+  )
+}
+
+function App() {
+  const [page, setPage] = useState<Page>('home')
+
+  return (
+    <div className="app">
+      <header className="nav">
+        <h1>My App</h1>
+        <nav>
+          <button
+            className={page === 'home' ? 'nav-btn active' : 'nav-btn'}
+            onClick={() => setPage('home')}
+          >
+            Home
+          </button>
+          <button
+            className={page === 'about' ? 'nav-btn active' : 'nav-btn'}
+            onClick={() => setPage('about')}
+          >
+            About
+          </button>
+          <button
+            className={page === 'contact' ? 'nav-btn active' : 'nav-btn'}
+            onClick={() => setPage('contact')}
+          >
+            Contact
+          </button>
+        </nav>
+      </header>
+      <main>
+        {page === 'home' && <HomePage />}
+        {page === 'about' && <AboutPage />}
+        {page === 'contact' && <ContactPage />}
+      </main>
     </div>
   )
 }
