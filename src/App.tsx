@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-import Spinner from './spinner'
-import AboutPage from './About'
-import ContactPage from './Contact'
+import Spinner from './components/spinner'
+import AboutPage from './components/About'
+import ContactPage from './components/Contact'
 
 interface Todo {
   id: number
